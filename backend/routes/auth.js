@@ -91,7 +91,7 @@ router.post('/login',[
     })
 
 
-   // Route 3: get user data using auth token
+   // Route 3:get user data using auth token :Post:"/api/auth/details"
 
     router.post('/details',fetchuser,async (req,res)=>{
   // if there are errors return bad request
