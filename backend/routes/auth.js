@@ -45,7 +45,10 @@ try{
       var token = jwt.sign(data, JWT_SECRET);
       console.log(token)
       // sending response 
-      res.json(user);
+      res.json({
+        info:user,
+        authtoken:token
+      });
     }
     //if some error is occured 
     catch(err)
