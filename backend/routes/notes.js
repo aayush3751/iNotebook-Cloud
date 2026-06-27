@@ -19,8 +19,8 @@ router.get('/fetchallnotes',fetchuser,async (req,res)=>{
 // Route 2: add notes : post "/api/notes/addnotes" 
 
 router.post('/addnotes',fetchuser,[
-    body('title','enter a valid name').isLength({min:3}),   // adding validations 
-  body('description','description length should be atleast 3').isLength({min:3})
+    body('title','enter a valid title').isLength({min:3}),   // adding validations 
+  body('description','description length should be atleast 3').isLength({min:3}),
 ],async (req,res)=>{
      const result = validationResult(req);
       if (!result.isEmpty()) {
@@ -44,24 +44,24 @@ catch(error){
 
 // Route 3: delete notes : post "/api/notes/deletenotes"
 
-router.post('/deletenote/:noteId',fetchuser,async (req,res)=>{
+router.delete('/deletenote/:noteId',fetchuser,async (req,res)=>{
      const result = validationResult(req);
       if (!result.isEmpty()) {
         return res.status(400).json({ errors: result.array() });
       }
 try{
-    console.log("noteId:", req.body.noteId);
+    console.log("noteId:", req.params.noteId);
 console.log("userId:", req.user.id);
-    const note=await Notes.findOneAndDelete({
-        user:req.user.id,
-       _id: req.params.noteId
+    const note = await Notes.findOneAndDelete({
+        user: req.user.id,
+        _id: req.params.noteId
     })
-    if(!note) res.status(404).send("not found")
-        res.status(200).json({
-            success: true,
-            message: "Note deleted successfully",
-            note
-        });
+    if (!note) return res.status(404).send("not found")
+    res.status(200).json({
+        success: true,
+        message: "Note deleted successfully",
+        note
+    });
 }
 catch(error)
 {

@@ -13,7 +13,9 @@ router.post('/createuser',[
   body('email','enter a valid mail').isEmail(),          //to check if something error is happening then return a message
   body('password','password length should be atleast 6').isLength({ min: 6 }) // like here password length should be 6
 ],async (req,res)=>{
+  console.log(req.body);
   // if there are errors return bad request
+       let success=false;
       const result = validationResult(req);
       if (!result.isEmpty()) {
         return res.status(400).json({ errors: result.array() });
@@ -37,7 +39,7 @@ try{
         email: req.body.email,
         password: secPassword // saving hash of password
       })
-
+        success=true;
       //jwt authentication 
       const data={
         id:user.id,
@@ -45,8 +47,8 @@ try{
       var token = jwt.sign(data, JWT_SECRET);
       console.log(token)
       // sending response 
-      res.json({
-        info:user,
+      res.send({
+        success:success,
         authtoken:token
       });
     }
@@ -67,13 +69,12 @@ router.post('/login',[
   body('password','password cannot be blank').exists() //  check for empty pasword
 ],async (req,res)=>{
   // if there are errors return bad request
+    let success=false;
       const result = validationResult(req);
-      if (!result.isEmpty()) {
+      if (!result.isEmpty()){
         return res.status(400).json({ errors: result.array() });
       }
-
-       const{email,password}=req.body
-
+      const{email,password}=req.body
       try {
         //check if user exists
        let user=await User.findOne({email:email})
@@ -84,11 +85,12 @@ router.post('/login',[
         //check password is correct or not
         const passwordCompare=await bcrypt.compare(password,user.password)
         if(!passwordCompare)return res.status(400).json({error:"invalid credentials"})
-        // const authtoken=jwt.sign({userid:user.id},JWT_SECRET)
-      res.send(user)
+        success=true;
+        const authtoken=jwt.sign({id:user.id},JWT_SECRET)
+        res.send({success,user,authtoken})
         
-      } catch (error) {
-        return res.status(400).json({error:"some error occured"})
+       } catch (error) {
+        return res.status(500).json({error:"some error occured"})
       }
 
     })
@@ -102,7 +104,12 @@ router.post('/login',[
       if (!result.isEmpty()) {
         return res.status(401).json({ errors: result.array() });
       }
-      const user=await User.findById(req.user.id).select("-password")
+      try {
+        const user=await User.findById(req.user.id).select("-password")
       res.send(user)
+    }
+       catch (error) {
+         return res.status(500).json({error:"some error occured"})
+      }
     })
 module.exports=router
