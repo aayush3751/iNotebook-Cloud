@@ -1,15 +1,16 @@
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
 import {useNavigate} from 'react-router-dom'
-
+import noteContext from '../context/notes/noteContext';
 const Signup = () => {
   const[user,setuser]=useState({name:"",email:"",password:"",cpassword:""})
   const navigate=useNavigate();
+  const context=useContext(noteContext);
     const handlesubmit = async (e) => {
         e.preventDefault();
-      if(user.cpassword!==user.password) return alert("password must be same");
-       const response=await fetch("http://localhost:5000/api/auth/createuser",{ 
-        method:"POST",
-        headers:{
+        if(user.cpassword!==user.password) return context.showAlert("error","password must be same");
+        const response=await fetch("http://localhost:5000/api/auth/createuser",{ 
+          method:"POST",
+          headers:{
           "Content-Type":"application/json"
         },
         body:JSON.stringify({
@@ -17,15 +18,16 @@ const Signup = () => {
           "email":user.email,
           "password":user.password
         })
-        });
-        const data=await response.json();
-        if(data.success){
-          console.log(data)
-          localStorage.setItem("token",data.authtoken)
-          navigate("/login")
-        }
-        else{
-          alert("fill the form correctly");
+      });
+      const data=await response.json();
+      if(data.success){
+        console.log(data)
+        localStorage.setItem("token",data.authtoken)
+        context.showAlert("success","account created successfully");
+        navigate("/login")
+      }
+      else{
+          context.showAlert("error","fill the form correctly");
         }
     }
     const onChange=(e)=>{

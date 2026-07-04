@@ -9,10 +9,12 @@ const fetchuser=async (req,res,next)=>{
     if(!user)return res.status(401).json({error:"user not exists"})
         req.user=user;
         next();
+       
     }
     catch(error)
     {
         res.status(401).json({error:"user Does not exists"})
+        
     }
    
 

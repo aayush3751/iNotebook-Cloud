@@ -6,26 +6,26 @@ const Login = () => {
   const context=useContext(noteContext)
    let navigate=useNavigate();
   const handlesubmit=async(e)=>{
-      context.showAlert();
-      e.preventDefault();
-      const response =await fetch("http://localhost:5000/api/auth/login",{
-        method:"POST",
-        headers: {
+    e.preventDefault();
+    const response =await fetch("http://localhost:5000/api/auth/login",{
+      method:"POST",
+      headers: {
         "Content-Type": "application/json",
       },
       body:JSON.stringify({
         email:credentials.email,
         password:credentials.password
       })
-      });
-      const json=await response.json();
-      if(json.success) {
-        console.log(json);
-        localStorage.setItem("token",json.authtoken);
-        navigate("/")
+    });
+    const json=await response.json();
+    if(json.success) {
+      console.log(json);
+      localStorage.setItem("token",json.authtoken);
+      context.showAlert("success","login successfully");
+      navigate("/")
       }
       else{
-        alert("invalid  credentials");
+        context.showAlert("error","invalid credentials");
       }
     }
     

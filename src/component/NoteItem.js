@@ -7,7 +7,8 @@ const NoteItem = (props) => {
     const context=useContext(noteContext);
     const{handleDelete}=context;
     const handleClick=()=>{
-    handleDelete(props.noteId)
+    handleDelete(props.noteId);
+    
     }
 
 

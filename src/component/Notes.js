@@ -27,7 +27,7 @@ const Notes = () => {
 // fetching notes before displaying 
   useEffect(() => {
     fetchnotes();
-    // eslint-disable-next-line
+   // eslint-disable-next-line
   }, []);
   return (
     <>
