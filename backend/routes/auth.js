@@ -5,7 +5,7 @@ const User=require('../models/User')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const fetchuser=require('../middleware/fetchuser')
-const JWT_SECRET='process.env.JWT';
+const JWT_SECRET=process.env.JWT_SECRET;
 
 // Route 1:create a user using: post "/api/auth/createuser" Doesn't require auth
 router.post('/createuser',[
