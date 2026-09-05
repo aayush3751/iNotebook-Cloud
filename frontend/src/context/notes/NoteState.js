@@ -84,7 +84,7 @@ setNotes(data);
     const editnote=async(id,title,description,tag)=>{
     //API CALL
     
-    const response = await fetch(`${host}api/notes/updatenotes/${id}`, {
+    await fetch(`${host}api/notes/updatenotes/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
