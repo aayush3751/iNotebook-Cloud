@@ -8,7 +8,8 @@ const Signup = () => {
     const handlesubmit = async (e) => {
         e.preventDefault();
         if(user.cpassword!==user.password) return context.showAlert("error","password must be same");
-        const response=await fetch("http://localhost:5000/api/auth/createuser",{ 
+        const host = (process.env.REACT_APP_HOST || "http://localhost:5000").replace(/\/$/, '');
+        const response = await fetch(`${host}/api/auth/createuser`, { 
           method:"POST",
           headers:{
           "Content-Type":"application/json"
